@@ -43,7 +43,6 @@ class HeatSolverGUI:
         self.T = None
         self.x = None
 
-        # База данных материалов: (Плотность, Теплоемкость, Теплопроводность)
         self.materials_db = {
             "Сталь": (7800.0, 460.0, 46.0),
             "Золото": (19300.0, 129.0, 317.0),
@@ -67,7 +66,7 @@ class HeatSolverGUI:
 
         self.params = {
             "L (Ширина пластины, м)": tk.DoubleVar(value=1.0),
-            "rho (Плотность, кг/м3)": tk.DoubleVar(value=19050.0),
+            "rho (Плотность, кг/м3)": tk.DoubleVar(value=19050.0), # Уран
             "c (Теплоемкость, Дж/кгC)": tk.DoubleVar(value=116.0),
             "lambda (Теплопровод., Вт/мC)": tk.DoubleVar(value=27.5),
             "T_initial (Нач. темп., C)": tk.DoubleVar(value=20.0),
@@ -90,7 +89,6 @@ class HeatSolverGUI:
         btn_frame.grid(row=row+1, column=0, columnspan=2)
         ttk.Button(btn_frame, text="Старт/Пауза", command=self.toggle_simulation).pack(side=tk.LEFT, padx=5)
 
-        # --- ОБЛАСТЬ ВЫБОРА МАТЕРИАЛОВ ---
         mat_frame = ttk.LabelFrame(control_frame, text="Быстрый выбор материала", padding="5")
         mat_frame.grid(row=row+2, column=0, columnspan=2, pady=10, sticky="ew")
         
@@ -99,12 +97,10 @@ class HeatSolverGUI:
             btn = ttk.Button(mat_frame, text=name, width=10, command=lambda p=props: self.set_material(p))
             btn.grid(row=m_row, column=m_col, padx=2, pady=2)
             m_col += 1
-            if m_col > 2:  # Размещаем по 3 кнопки в ряд
+            if m_col > 2:
                 m_col = 0
                 m_row += 1
-        # ---------------------------------
 
-        # --- ОБЛАСТЬ ГЕНЕРАЦИИ ТАБЛИЦЫ ---
         tbl_frame = ttk.Frame(control_frame)
         tbl_frame.grid(row=row+3, column=0, columnspan=2, pady=10)
         
@@ -113,7 +109,6 @@ class HeatSolverGUI:
         ttk.Entry(tbl_frame, textvariable=self.table_time_var, width=8).pack(side=tk.LEFT, padx=5)
         
         ttk.Button(control_frame, text="Генерировать таблицу", command=self.generate_table).grid(row=row+4, column=0, columnspan=2, pady=5)
-        # ---------------------------------
         
         self.time_label = ttk.Label(control_frame, text="Время: 0.00 с", font=("Arial", 12, "bold"))
         self.time_label.grid(row=row+5, column=0, columnspan=2, pady=10)
@@ -135,7 +130,7 @@ class HeatSolverGUI:
         self.params["rho (Плотность, кг/м3)"].set(rho)
         self.params["c (Теплоемкость, Дж/кгC)"].set(c)
         self.params["lambda (Теплопровод., Вт/мC)"].set(lam)
-        self.reset_simulation() # Автоматически применяем новые параметры
+        self.reset_simulation()
 
     def reset_simulation(self):
         L = self.params["L (Ширина пластины, м)"].get()
@@ -187,7 +182,6 @@ class HeatSolverGUI:
         self.root.after(1, self.run_step)
 
     def generate_table(self):
-        # Берем параметры генерации прямо из интерфейса
         target_time = self.table_time_var.get()
         L = self.params["L (Ширина пластины, м)"].get()
         rho = self.params["rho (Плотность, кг/м3)"].get()
