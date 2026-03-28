@@ -3,10 +3,6 @@ import time
 
 
 class LinearCongruentialGenerator:
-    """
-    Линейный конгруэнтный генератор (LCG).
-    Формула: X_{n+1} = (a * X_n + c) mod m
-    """
     def __init__(self, seed, a=16807, c=12345, m=(2 ** 31 - 1)):
         self.state = seed
         self.a = a
@@ -14,17 +10,14 @@ class LinearCongruentialGenerator:
         self.m = m
 
     def random(self):
-        """Возвращает случайное число в диапазоне [0, 1)"""
         self.state = (self.a * self.state + self.c) % self.m
         return self.state / self.m
 
 
 def calculate_mean(data):
-    """Вычисление выборочного среднего"""
     return sum(data) / len(data)
 
 def calculate_variance(data, mean):
-    """Вычисление выборочной дисперсии"""
     n = len(data)
     return sum((x - mean) ** 2 for x in data) / (n - 1)
 
