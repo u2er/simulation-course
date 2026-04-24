@@ -251,13 +251,23 @@ class SimulationApp(ctk.CTk):
             if i >= len(axs): break
             ax = axs[i]
             
-            half_n = math.ceil(N / 2)
-            u1 = u2 = np.random.rand(half_n)
+            # half_n = math.ceil(N / 2)
+            # u1 = u2 = np.random.rand(half_n)
 
-            z0 = np.sqrt(-2.0 * np.log(u1)) * np.cos(2.0 * np.pi * u2)
-            z1 = np.sqrt(-2.0 * np.log(u1)) * np.sin(2.0 * np.pi * u2)
+            # z0 = np.sqrt(-2.0 * np.log(u1)) * np.cos(2.0 * np.pi * u2)
+            # z1 = np.sqrt(-2.0 * np.log(u1)) * np.sin(2.0 * np.pi * u2)
  
-            z = np.concatenate((z0, z1))[:N]
+            # z = np.concatenate((z0, z1))[:N]
+            # sample = mu + sigma * z
+            
+            ''' 
+            # АЛЬТЕРНАТИВНЫЙ ВАРИАНТ (Метод на основе ЦПТ - сумма 12-ти)
+            # Если преподаватель требует метод суммы 12 случайных чисел, раскомментируйте это,
+            # а блок Бокса-Мюллера закомментируйте:
+            '''
+            
+            u = np.random.rand(N, 12)        # Матрица N строк, 12 столбцов (U(0,1))
+            z = np.sum(u, axis=1) - 6.0      # Суммируем каждую строку и вычитаем 6
             sample = mu + sigma * z
             
             ax.hist(sample, bins='auto', density=True, color='#B388FF', edgecolor='#651FFF', alpha=0.7, linewidth=1.2)
