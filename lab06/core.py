@@ -152,7 +152,10 @@ class SimulationApp(ctk.CTk):
             if i >= len(axs): break
             ax = axs[i]
     
-            sample = np.random.choice(x_vals, size=N, p=p_vals)
+            u = np.random.rand(N)
+            cdf = np.cumsum(p_vals)
+            indices = np.searchsorted(cdf, u)
+            sample = x_vals[indices]
             
             emp_mean = np.mean(sample)
             emp_var = np.var(sample, ddof=0)
@@ -248,7 +251,14 @@ class SimulationApp(ctk.CTk):
             if i >= len(axs): break
             ax = axs[i]
             
-            sample = np.random.normal(mu, sigma, N)
+            half_n = math.ceil(N / 2)
+            u1 = u2 = np.random.rand(half_n)
+
+            z0 = np.sqrt(-2.0 * np.log(u1)) * np.cos(2.0 * np.pi * u2)
+            z1 = np.sqrt(-2.0 * np.log(u1)) * np.sin(2.0 * np.pi * u2)
+ 
+            z = np.concatenate((z0, z1))[:N]
+            sample = mu + sigma * z
             
             ax.hist(sample, bins='auto', density=True, color='#B388FF', edgecolor='#651FFF', alpha=0.7, linewidth=1.2)
             
